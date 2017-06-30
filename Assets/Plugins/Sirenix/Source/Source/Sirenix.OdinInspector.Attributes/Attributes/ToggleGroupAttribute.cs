@@ -1,0 +1,112 @@
+//-----------------------------------------------------------------------
+// <copyright file="ToggleGroupAttribute.cs" company="Sirenix IVS">
+// Copyright (c) Sirenix IVS. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+namespace Sirenix.OdinInspector
+{
+    using System;
+
+    /// <summary>
+    /// <para>ToggleGroup is used on any field, and create a toggleable group of options.</para>
+    /// <para>Use this to create options that can be enabled or disabled.</para>
+    /// </summary>
+	/// <remarks>
+	/// <para>The <see cref="ToggleMemberName"/> functions as the ID for the ToggleGroup, and therefore all members of a toggle group must specify the same toggle member.</para>
+	/// <note note="Note">This attribute does not support static members!</note>
+	/// </remarks>
+	/// <example>
+	/// <para>The following example shows how ToggleGroup is used to create two seperate toggleable groups.</para>
+    /// <code>
+	/// public class MyComponent : MonoBehaviour
+	///	{
+	///		// This attribute has a title specified for the group. The title only needs to be applied to a single attribute for a group.
+	///		[ToggleGroup("FirstToggle", order: -1, groupTitle: "First")]
+	///		public bool FirstToggle;
+	///
+	///		[ToggleGroup("FirstToggle")]
+	///		public int MyInt;
+	///
+	///		// This group specifies a member string as the title of the group. A property or a function can also be used.
+	///		[ToggleGroup("SecondToggle", titleStringMemberName: "SecondGroupTitle")]
+	///		public bool SecondToggle { get; set; }
+	///
+	///		[ToggleGroup("SecondToggle")]
+	///		public float MyFloat;
+	///
+	///		[HideInInspector]
+	///		public string SecondGroupTitle = "Second";
+	///	}
+    /// </code>
+    /// </example>
+	/// <seealso cref="ToggleAttribute"/>
+	/// <seealso cref="ToggleListAttribute"/>"/>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public sealed class ToggleGroupAttribute : PropertyGroupAttribute
+    {
+        /// <summary>
+        /// Creates a ToggleGroup. See <see cref="ToggleGroupAttribute"/>.
+        /// </summary>
+        /// <param name="toggleMemberName">Name of any bool field or property to enable or disable the ToggleGroup.</param>
+        /// <param name="order">The order of the group.</param>
+        /// <param name="groupTitle">Use this to name the group differently than toggleMemberName.</param>
+        /// <param name="titleStringMemberName">Name of a string field, property or function that gets the title of for the ToggleGroup.</param>
+        public ToggleGroupAttribute(string toggleMemberName, int order = 0, string groupTitle = null, string titleStringMemberName = null)
+            : base(toggleMemberName, order)
+        {
+            this.ToggleMemberName = toggleMemberName;
+            this.ToggleGroupTitle = groupTitle;
+            this.TitleStringMemberName = titleStringMemberName;
+            this.CollapseOthersOnExpand = true;
+        }
+
+        /// <summary>
+        /// Name of any bool field, property or function to enable or disable the ToggleGroup.
+        /// </summary>
+        public string ToggleMemberName { get; private set; }
+
+        /// <summary>
+        /// Title of the toggle group in the inspector.
+        /// If <c>null</c> <see cref="ToggleMemberName"/> will be used instead.
+        /// </summary>
+        public string ToggleGroupTitle { get; private set; }
+
+        /// <summary>
+        /// Name of any string field, property or function, to title the toggle group in the inspector.
+		/// If <c>null</c> <see cref="ToggleGroupTitle"/> will be used instead.
+        /// </summary>
+        public string TitleStringMemberName { get; private set; }
+
+        /// <summary>
+        /// If true, all other open toggle groups will collapse once another one opens.
+        /// </summary>
+        public bool CollapseOthersOnExpand { get; set; }
+
+        /// <summary>
+        /// Combines the ToggleGroup with another ToggleGroup.
+        /// </summary>
+        /// <param name="other">Another ToggleGroup.</param>
+        protected override void CombineValuesWith(PropertyGroupAttribute other)
+        {
+            var attr = other as ToggleGroupAttribute;
+            if (this.ToggleGroupTitle == null)
+            {
+                this.ToggleGroupTitle = attr.ToggleGroupTitle;
+            }
+            else if (attr.ToggleGroupTitle == null)
+            {
+                attr.ToggleGroupTitle = this.ToggleGroupTitle;
+            }
+            if (this.TitleStringMemberName == null)
+            {
+                this.TitleStringMemberName = attr.TitleStringMemberName;
+            }
+            else if (attr.TitleStringMemberName == null)
+            {
+                attr.TitleStringMemberName = this.TitleStringMemberName;
+            }
+            this.CollapseOthersOnExpand = this.CollapseOthersOnExpand || attr.CollapseOthersOnExpand;
+            attr.CollapseOthersOnExpand = this.CollapseOthersOnExpand;
+        }
+    }
+}
