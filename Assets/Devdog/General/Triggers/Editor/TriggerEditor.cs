@@ -26,7 +26,7 @@ namespace Devdog.General.Editors
             _inputHandlers.description = "Add an input handler to trigger this trigger with a key press, button press, etc";
             _inputHandlers.allowMultipleImplementations = false;
 
-            var rangeHandlerTarget = t.transform.FindChild("_RangeHandler");
+            var rangeHandlerTarget = t.transform.Find("_RangeHandler");
             if (rangeHandlerTarget == null)
             {
                 rangeHandlerTarget = t.transform;
@@ -45,7 +45,7 @@ namespace Devdog.General.Editors
         private void AddRangeHandlerModule(Type type)
         {
             var t = (Trigger) target;
-            var rangeHandlerTarget = t.transform.FindChild("_RangeHandler");
+            var rangeHandlerTarget = t.transform.Find("_RangeHandler");
             if (rangeHandlerTarget == null)
             {
                 rangeHandlerTarget = new GameObject("_RangeHandler").transform;

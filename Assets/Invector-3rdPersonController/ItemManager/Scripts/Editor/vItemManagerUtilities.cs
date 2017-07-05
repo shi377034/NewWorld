@@ -61,7 +61,7 @@ public partial class vItemManagerUtilities
                 if (animator)
                 {
                     var parent = animator.GetBoneTransform(HumanBodyBones.LeftHand);
-                    var defaultPoint = parent.FindChild("defaultEquipPoint");
+                    var defaultPoint = parent.Find("defaultEquipPoint");
 
                     if (defaultPoint)
                         equipPointL.handler.defaultHandler = defaultPoint;
@@ -133,7 +133,7 @@ public partial class vItemManagerUtilities
                 if (animator)
                 {
                     var parent = animator.GetBoneTransform(HumanBodyBones.RightHand);
-                    var defaultPoint = parent.FindChild("defaultEquipPoint");
+                    var defaultPoint = parent.Find("defaultEquipPoint");
                     if (defaultPoint) equipPointR.handler.defaultHandler = defaultPoint;
                     else
                     {

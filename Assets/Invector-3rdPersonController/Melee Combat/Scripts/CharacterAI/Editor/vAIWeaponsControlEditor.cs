@@ -41,7 +41,7 @@ public class vAIWeaponsControlEditor : Editor
             }
             if (rightHand && weaponCtrl.defaultEquipPointR == null)
             {
-                var child = rightHand.FindChild("defaultEquipPoint");
+                var child = rightHand.Find("defaultEquipPoint");
                 GameObject customPoint;
                 if (child)
                     customPoint = child.gameObject;
